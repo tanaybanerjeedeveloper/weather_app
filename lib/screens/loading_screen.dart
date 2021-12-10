@@ -10,15 +10,18 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   LocationService locationHelper = LocationService();
+
+  @override
+  void initState() {
+    locationHelper.getCurrentLocation();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: RaisedButton(
-        child: Text('get location'),
-        color: Colors.deepPurple,
-        textColor: Colors.white,
-        onPressed: locationHelper.getCurrentLocation,
-      ),
+      child: Text('here should be the soinner'),
     );
   }
 }
