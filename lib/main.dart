@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './screens/loading_screen.dart';
+import './screens/weather_result_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData.dark(),
-      home: LoadingScreen(),
+      home: WeatherResult(),
     );
   }
 }
