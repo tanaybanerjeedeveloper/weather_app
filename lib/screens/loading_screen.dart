@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../services/location_service.dart';
 import '../services/networking_service.dart';
+import './weather_result_screen.dart';
+import '../services/weather_service.dart';
 
 const apiKey = '4ceb029340e11d9abb0554e5d07f276a';
 
@@ -15,6 +17,7 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen> {
   double _latitude;
   double _longitude;
+  WeatherService weatherService = WeatherService();
 
   @override
   void initState() {
@@ -33,8 +36,27 @@ class _LoadingScreenState extends State<LoadingScreen> {
 
     // sending http request
     NetworkingService networkingService = NetworkingService(
-        'https://api.openweathermap.org/data/2.5/weather?lat=${_latitude}&lon=${_longitude}&appid=$apiKey');
-    networkingService.getWeatherData();
+        'https://api.openweathermap.org/data/2.5/weather?lat=$_latitude&lon=$_longitude&appid=$apiKey&units=metric');
+    var result = await networkingService.getWeatherData();
+    print(result['name']);
+    print(result['main']['temp']);
+    var cityName = result['name'];
+    var temperature = result['main']['temp'];
+    var condition = result['weather'][0]['id'];
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) {
+          return WeatherResult(
+            cityName: cityName,
+            temperature: temperature,
+            weatherIcon: weatherService.getWeatherIcon(condition),
+            weatherMsg: weatherService.getMessage(temperature),
+          );
+        },
+      ),
+    );
   }
 
   @override
