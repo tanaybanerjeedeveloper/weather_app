@@ -2,18 +2,39 @@ import 'package:flutter/material.dart';
 import '../utilities/constants.dart';
 import '../services/weather_service.dart';
 
-class WeatherResult extends StatelessWidget {
-  WeatherService weatherService = WeatherService();
-  final String cityName;
-  final double temperature;
-  final String weatherIcon;
-  final String weatherMsg;
+class WeatherResult extends StatefulWidget {
+  final dynamic weatherData;
+
   WeatherResult({
-    @required this.cityName,
-    @required this.temperature,
-    @required this.weatherIcon,
-    @required this.weatherMsg,
+    @required this.weatherData,
   });
+
+  @override
+  _WeatherResultState createState() => _WeatherResultState();
+}
+
+class _WeatherResultState extends State<WeatherResult> {
+  WeatherService weatherService = WeatherService();
+  String cityName;
+  double temperature;
+  String weatherMsg;
+  String weatherIcon;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateUI(widget.weatherData);
+  }
+
+  void _updateUI(dynamic weatherData) {
+    setState(() {
+      cityName = weatherData['name'];
+      temperature = weatherData['main']['temp'];
+      weatherMsg = weatherService.getMessage(temperature);
+      weatherIcon =
+          weatherService.getWeatherIcon(weatherData['weather'][0]['id']);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,28 +68,13 @@ class WeatherResult extends StatelessWidget {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(left: 15.0),
-              //   child: Row(
-              //     children: [
-              //       Text(
-              //         '$temperature',
-              //         style: kTempTextStyle,
-              //       ),
-              //       Text(
-              //         weatherIcon,
-              //         style: kConditionTextStyle,
-              //       ),
-              //     ],
-              //   ),
-              // ),
               Container(
                 child: Center(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '$temperature',
+                        '${temperature.toStringAsFixed(0)}',
                         style: kTempTextStyle,
                       ),
                       Text(
@@ -79,19 +85,11 @@ class WeatherResult extends StatelessWidget {
                   ),
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(right: 15.0),
-              //   child: Text(
-              //     '$weatherMsg in $cityName',
-              //     textAlign: TextAlign.right,
-              //     style: kMessageTextStyle,
-              //   ),
-              // )
               Container(
                 // padding: EdgeInsets.only(right: 15.0),
 
                 child: Text(
-                  '$weatherMsg in $cityName',
+                  '${weatherMsg} in ${cityName}',
                   textAlign: TextAlign.center,
                   style: kMessageTextStyle,
                 ),
