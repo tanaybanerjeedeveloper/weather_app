@@ -28,6 +28,13 @@ class _WeatherResultState extends State<WeatherResult> {
 
   void _updateUI(dynamic weatherData) {
     setState(() {
+      if (weatherData == null) {
+        cityName = '';
+        temperature = 0.0;
+        weatherMsg = 'No Message';
+        weatherIcon = '';
+        return;
+      }
       cityName = weatherData['name'];
       temperature = weatherData['main']['temp'];
       weatherMsg = weatherService.getMessage(temperature);
@@ -54,7 +61,10 @@ class _WeatherResultState extends State<WeatherResult> {
             children: [
               ListTile(
                 leading: FlatButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var weatherData = await weatherService.getLocationWeather();
+                    _updateUI(weatherData);
+                  },
                   child: Icon(
                     Icons.near_me,
                     size: 30.0,
