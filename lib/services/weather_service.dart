@@ -7,6 +7,13 @@ class WeatherService {
   double latitude;
   double longitude;
 
+  Future<dynamic> getCityWeather(String cityName) {
+    NetworkingService networkingService = NetworkingService(
+        'https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apiKey&units=metric');
+    var result = networkingService.getWeatherData();
+    return result;
+  }
+
   Future<dynamic> getLocationWeather() async {
     //fetching the current location
     LocationService locationService = LocationService();

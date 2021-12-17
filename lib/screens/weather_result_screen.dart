@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../utilities/constants.dart';
 import '../services/weather_service.dart';
 
+import './location_search.dart';
+
 class WeatherResult extends StatefulWidget {
   final dynamic weatherData;
 
@@ -71,7 +73,21 @@ class _WeatherResultState extends State<WeatherResult> {
                   ),
                 ),
                 trailing: FlatButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var typedCityName = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return LocationSearch();
+                        },
+                      ),
+                    );
+                    if (typedCityName != null) {
+                      var weatherData =
+                          await weatherService.getCityWeather(typedCityName);
+                      _updateUI(weatherData);
+                    }
+                  },
                   child: Icon(
                     Icons.location_city,
                     size: 30.0,
